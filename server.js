@@ -1,4 +1,4 @@
-// Criando os dois endpoints:
+// Criando endpoints:
 //  - /unlimited -> sem limitação de requisições
 //  - /limited   -> que será limitado
 
@@ -6,14 +6,16 @@ const express = require('express');
 const limitadorDeRequisicoes = require('./limitador');
 
 const app = express();
-const porta = 8080;
+const port = 8080;
 
 // Rota sem limite
+// Para testar: http://localhost:8080/unlimited
 app.get('/unlimited', (req, res) => {
     res.send("Sem limite! Pode usar tranquilo!");
 });
 
 // Rota com limite de requisições
+// Para testar: http://localhost:8080/limited
 app.get('/limited', limitadorDeRequisicoes, (req, res) => {
     res.send("Limitado, não abuse!");
 });
