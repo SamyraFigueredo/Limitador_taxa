@@ -1,26 +1,35 @@
-const janelaTempoMS = 60 * 1000; // 1 minuto em milissegundos
-const maximoRequisicoes = 5; // máximo de 5 requisições por janela
+const capacidadeMaxima = 5;
+const taxaDeRecarga = 1;
 
-const armazenamento_IP_requisicoes = {}; // armazena os IPs e seus timestamps
+const buckets = {}; // Armazena info por IP
 
-const limitadorDeRequisicoes = (req, res, next) => {
+const tokenBucket = (req, res, next) => {
     const ip = req.ip;
+    const agora = Date.now() / 1000;
 
-    if (!armazenamento_IP_requisicoes[ip]) {
-        armazenamento_IP_requisicoes[ip] = [];
+    if (!buckets[ip]) {
+        buckets[ip] = {
+            tokens: capacidadeMaxima,
+            ultimaRequisicao: agora
+        };
     }
 
-    const tempoAtual = Date.now();
-    armazenamento_IP_requisicoes[ip] = armazenamento_IP_requisicoes[ip].filter(
-        timestamp => tempoAtual - timestamp < janelaTempoMS
-    );
+    const bucket = buckets[ip];
+    const tempoDecorrido = agora - bucket.ultimaRequisicao;
+    bucket.ultimaRequisicao = agora;
 
-    if (armazenamento_IP_requisicoes[ip].length >= maximoRequisicoes) {
-        return res.status(429).send('Você atingiu o limite de requisições. Tente novamente mais tarde.');
+    // Recarrega os tokens com base na taxa
+    bucket.tokens += tempoDecorrido * taxaDeRecarga;
+    if (bucket.tokens > capacidadeMaxima) {
+        bucket.tokens = capacidadeMaxima;
     }
 
-    armazenamento_IP_requisicoes[ip].push(tempoAtual);
+    if (bucket.tokens < 1) {
+        return res.status(429).send("Muitas requisições! Espere um pouco.");
+    }
+
+    bucket.tokens -= 1;
     next();
 };
 
-module.exports = limitadorDeRequisicoes;
+module.exports = tokenBucket;
