@@ -1,13 +1,16 @@
 const express = require('express');
+const cors = require('cors');
+
+const app = express();
+const port = 8080;
+
+app.use(cors());
 
 const limitadorDeRequisicoes = require('./token_bucket');
 const contadorDeJanelaFixa = require('./limitador_fixo');
 const logJanelaDeslizante = require('./limitador_log');
 const contadorJanelaDeslizante = require('./limitador_deslizante');
 const limitadorRedis = require('./limitador_redis');
-
-const app = express();
-const port = 8080;
 
 // Rotas HTTP
 app.get('/unlimited', (req, res) => {
