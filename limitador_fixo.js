@@ -22,7 +22,7 @@ const contadorDeJanelaFixa = (req, res, next) => {
     // Verifica se ainda está na mesma janela
     if (tempo_atual - janela.janelaInicio < TAMANHO_DA_JANELA) {
         if (janela.contador >= LIMITE_POR_JANELA) {
-            return res.status(429).sendFile(path.join(__dirname, 'views', 'erro429.html'));
+            return res.status(429).sendFile(path.join(__dirname, 'views', 'erro429Fixed.html'));
         } else {
             janela.contador += 1;
             return next();
