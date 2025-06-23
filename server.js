@@ -3,6 +3,9 @@ const express = require('express');
 const app = express();
 const port = 8080;
 
+const path = require('path');
+app.use(express.static(path.join(__dirname)));
+
 const limitadorDeRequisicoes = require('./token_bucket');
 const contadorDeJanelaFixa = require('./limitador_fixo');
 const logJanelaDeslizante = require('./limitador_log');

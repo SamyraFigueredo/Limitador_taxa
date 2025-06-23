@@ -1,3 +1,5 @@
+const path = require('path');
+
 const LIMITE_POR_JANELA = 10;
 const TAMANHO_DA_JANELA = 60 * 1000;
 
@@ -20,7 +22,7 @@ const contadorDeJanelaFixa = (req, res, next) => {
     // Verifica se ainda está na mesma janela
     if (agora - janela.janelaInicio < TAMANHO_DA_JANELA) {
         if (janela.contador >= LIMITE_POR_JANELA) {
-            return res.status(429).send("Muitas requisições nesta janela de tempo.");
+            return res.status(429).sendFile(path.join(__dirname, 'views', 'erro429.html'));
         } else {
             janela.contador += 1;
             return next();

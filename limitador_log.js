@@ -1,3 +1,5 @@
+const path = require('path');
+
 const limite = 5;
 const intervalo = 10;
 
@@ -13,7 +15,7 @@ const logJanelaDeslizante = (req, res, next) => {
     logs[ip] = logs[ip].filter(timestamp => agora - timestamp <= intervalo);
 
     if (logs[ip].length >= limite) {
-        return res.status(429).send("Muitas requisições! Espere um pouco.");
+        return res.status(429).sendFile(path.join(__dirname, 'views', 'erro429.html'));
     }
 
     logs[ip].push(agora);

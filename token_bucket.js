@@ -1,3 +1,5 @@
+const path = require('path');
+
 const capacidadeMaxima = 5;
 const taxaDeRecarga = 1;
 
@@ -25,7 +27,7 @@ const tokenBucket = (req, res, next) => {
     }
 
     if (bucket.tokens < 1) {
-        return res.status(429).send("Muitas requisições! Espere um pouco.");
+        return res.status(429).sendFile(path.join(__dirname, 'views', 'erro429.html'));
     }
 
     bucket.tokens -= 1;

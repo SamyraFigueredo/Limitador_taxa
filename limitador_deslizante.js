@@ -1,3 +1,5 @@
+const path = require('path');
+
 const limite = 5;
 const janela = 10;
 
@@ -35,7 +37,7 @@ const contadorJanelaDeslizante = (req, res, next) => {
     const total = dados.contadorJanelaAtual + pesoJanelaAnterior * dados.contadorJanelaAnterior;
 
     if (total >= limite) {
-        return res.status(429).send("Muitas requisições! Espere um pouco.");
+        return res.status(429).sendFile(path.join(__dirname, 'views', 'erro429.html'));
     }
 
     // Incrementa o contador da janela atual
