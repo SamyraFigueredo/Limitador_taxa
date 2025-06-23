@@ -7,11 +7,11 @@ const janelas = {};
 
 const contadorDeJanelaFixa = (req, res, next) => {
     const ip = req.ip;
-    const agora = Date.now();
+    const tempo_atual = Date.now();
 
     if (!janelas[ip]) {
         janelas[ip] = {
-            janelaInicio: agora,
+            janelaInicio: tempo_atual,
             contador: 1
         };
         return next();
@@ -20,7 +20,7 @@ const contadorDeJanelaFixa = (req, res, next) => {
     const janela = janelas[ip];
 
     // Verifica se ainda está na mesma janela
-    if (agora - janela.janelaInicio < TAMANHO_DA_JANELA) {
+    if (tempo_atual - janela.janelaInicio < TAMANHO_DA_JANELA) {
         if (janela.contador >= LIMITE_POR_JANELA) {
             return res.status(429).sendFile(path.join(__dirname, 'views', 'erro429.html'));
         } else {
@@ -30,7 +30,7 @@ const contadorDeJanelaFixa = (req, res, next) => {
     } else {
         // Nova janela: reinicia contador e tempo
         janelas[ip] = {
-            janelaInicio: agora,
+            janelaInicio: tempo_atual,
             contador: 1
         };
         return next();

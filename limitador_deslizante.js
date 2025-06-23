@@ -7,10 +7,10 @@ const contadores = {};
 
 const contadorJanelaDeslizante = (req, res, next) => {
     const ip = req.ip;
-    const agora = Date.now() / 1000;
+    const tempo_atual = Date.now() / 1000;
 
     // Calcula o número da janela atual
-    const janelaAtual = Math.floor(agora / janela);
+    const janelaAtual = Math.floor(tempo_atual / janela);
 
     if (!contadores[ip]) {
         contadores[ip] = {
@@ -30,7 +30,7 @@ const contadorJanelaDeslizante = (req, res, next) => {
     }
 
     // Calcula o peso da janela anterior com base no tempo decorrido
-    const tempoJanelaAtual = (agora % janela);
+    const tempoJanelaAtual = (tempo_atual % janela);
     const pesoJanelaAnterior = (janela - tempoJanelaAtual) / janela;
 
     // Contagem ponderada das requisições
