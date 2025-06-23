@@ -5,18 +5,18 @@ const buckets = {}; // Armazena info por IP
 
 const tokenBucket = (req, res, next) => {
     const ip = req.ip;
-    const agora = Date.now() / 1000;
+    const tempo_atual = Date.now() / 1000;
 
     if (!buckets[ip]) {
         buckets[ip] = {
             tokens: capacidadeMaxima,
-            ultimaRequisicao: agora
+            ultimaRequisicao: tempo_atual
         };
     }
 
     const bucket = buckets[ip];
-    const tempoDecorrido = agora - bucket.ultimaRequisicao;
-    bucket.ultimaRequisicao = agora;
+    const tempoDecorrido = tempo_atual - bucket.ultimaRequisicao;
+    bucket.ultimaRequisicao = tempo_atual;
 
     // Recarrega os tokens com base na taxa
     bucket.tokens += tempoDecorrido * taxaDeRecarga;
