@@ -1,16 +1,12 @@
 const express = require('express');
-const cors = require('cors');
 
 const app = express();
 const port = 8080;
-
-app.use(cors());
 
 const limitadorDeRequisicoes = require('./token_bucket');
 const contadorDeJanelaFixa = require('./limitador_fixo');
 const logJanelaDeslizante = require('./limitador_log');
 const contadorJanelaDeslizante = require('./limitador_deslizante');
-const limitadorRedis = require('./limitador_redis');
 
 // Rotas HTTP
 app.get('/unlimited', (req, res) => {
@@ -31,10 +27,6 @@ app.get('/log', logJanelaDeslizante, (req, res) => {
 
 app.get('/sliding', contadorJanelaDeslizante, (req, res) => {
     res.send("Endpoint com contador de janela deslizante!");
-});
-
-app.get('/redis', limitadorRedis, (req, res) => {
-    res.send("Endpoint com limitação usando Redis!");
 });
 
 app.get('/', (req, res) => {
